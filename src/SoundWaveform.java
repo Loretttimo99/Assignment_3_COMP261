@@ -43,10 +43,13 @@ public class SoundWaveform{
     private ArrayList<ComplexNumber> spectrum = new ArrayList<ComplexNumber>(); // the spectrum: length/mod of each X(k)
     private ComplexNumber c = new ComplexNumber();
 
+    private boolean waveform_flag = false;
+
     /**
      * Displays the waveform.
      */
     public void displayWaveform(){
+        waveform_flag = true;
         if (this.waveform == null){ //there is no data to display
             UI.println("No waveform to display");
             return;
@@ -79,6 +82,7 @@ public class SoundWaveform{
      * Displays the spectrum. Scale to the range of +/- 300.
      */
     public void displaySpectrum() {
+        waveform_flag = false;
         if (this.spectrum == null){ //there is no data to display
             UI.println("No spectrum to display");
             return;
@@ -330,6 +334,35 @@ public class SoundWaveform{
         UI.setWindowSize(950, 630);
     }
 
+    private int spectrum_index;
+    private boolean pressed_flag = false;
+    private double initial_v;
+
     private void doMouse(String s, double v, double v1) {
+        System.out.println(s);
+        System.out.println("v: " + v + ", v1: " + v1);
+        if (spectrum.isEmpty() || !waveform_flag){
+            return;
+        }
+
+        if (s.equalsIgnoreCase("pressed")){
+            pressed_flag = true;
+            int index = (int)((GRAPH_LEFT - v)/X_STEP);
+            System.out.println("Spectrum size: " + spectrum.size() + ", index: " + index);
+            if (index >= spectrum.size()){
+                System.out.println("shit fucked: " + index);
+                return;
+            }
+            spectrum_index = index;
+            initial_v = v1;
+            System.out.println(spectrum.get(index));
+//            spectrum.get((int)((v - GRAPH_LEFT)/X_STEP));
+        }else if (s.equalsIgnoreCase("released")){
+            pressed_flag = false;
+            double dv = v1 - initial_v;
+            spectrum.get(spectrum_index).set(ComplexNumber.add(spectrum.get(spectrum_index), new ComplexNumber(dv, 0)));
+
+        }
+
     }
 }

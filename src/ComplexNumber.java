@@ -99,7 +99,7 @@ public class ComplexNumber
     //Simple operations for complex numbers implemented into the program
     //These equations were taken from the lecture slides
 
-    public ComplexNumber add(ComplexNumber n1, ComplexNumber n2){
+    public static ComplexNumber add(ComplexNumber n1, ComplexNumber n2){
         double real = n1.getRe() + n2.getRe();
         double img = n1.getIm() + n2.getIm();
         return new ComplexNumber(real,img);
